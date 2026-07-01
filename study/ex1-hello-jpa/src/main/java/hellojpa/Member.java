@@ -12,6 +12,15 @@ public class Member {
     private long id;
     private String name;
 
+    // 기본 생성자가 필요하다. - 추후 학습
+    public Member() {
+    }
+
+    public Member(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

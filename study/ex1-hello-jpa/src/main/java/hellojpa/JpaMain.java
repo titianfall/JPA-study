@@ -15,16 +15,27 @@ public class JpaMain {
         tx.begin();
 
         try{
-            // Member findMember = em.find(Member.class, 1L);
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
-            for(Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+//            // 비영속
+//            Member member = new Member();
+//            member.setId(101L);
+//            member.setName("HelloJPA");
+//
+//            // 영속
+//            System.out.println("=== BEFORE ===");
+//            em.persist(member); // 1차 캐시에 저장됨
+//            System.out.println("=== AFTER ===");
+//            // before 과 after 사이에 쿼리가 날라가지 않았다!
 
-            tx.commit();
+            // 1차 캐시에서 가져옴 ( sql 쿼리가 필요없음 )
+            System.out.println("findMember1");
+            Member findMember1 = em.find(Member.class, 101L);
+            System.out.println("findMember2");
+            Member findMember2 = em.find(Member.class, 101L);
+
+            // 같은 트랜잭션 내에서 영속성 컨텍스트의 1차 캐시 덕분에 둘은 동일함
+            System.out.println("isEqualTo = " + (findMember1 == findMember2));
+            System.out.println("tx.commit()");
+            tx.commit(); // 쿼리는 transaction commit 시에 날라간다.
         } catch(Exception e) {
             tx.rollback();
         } finally {

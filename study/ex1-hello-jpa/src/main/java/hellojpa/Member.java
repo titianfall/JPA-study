@@ -7,14 +7,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-// jpa 가 관리하는 entity로 인식 및 관리한다.
+// JPA가 관리하는 entity로 인식 및 관리한다.
 // 일반적으로 클래스 이름 = 테이블 이름 매핑
 @Entity
-// @Table(name = "MBR") // MBR 이라는 테이블로 나가게된다.(회사 내부 규정이라 가정)
+// @Table(name = "MBR") // MBR이라는 테이블로 나가게 된다. (회사 내부 규정이라 가정)
+@SequenceGenerator(
+        name = "member_seq_generator",
+        sequenceName = "member_seq", // 매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1,
+        allocationSize = 1
+)
 public class Member {
 
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String username;
@@ -59,7 +66,7 @@ public class Member {
         this.id = id;
     }
 
-    public String getUsernameame() {
+    public String getUsername() {
         return username;
     }
     public void setUsername(String name) {

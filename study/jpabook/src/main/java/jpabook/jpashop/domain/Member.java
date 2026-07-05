@@ -40,8 +40,10 @@ public class Member {
     public Team getTeam() {
         return team;
     }
-
-    public void setTeam(Team team) {
+    // 이름을 직관적으로 주어 강조
+    public void changeTeam(Team team) {
         this.team = team;
+        team.getMembers().add(this);
     }
+
 }

@@ -7,19 +7,19 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MEMBER_ID") // 대소문자는 회사의 룰을 따르면 됨
     private Long id;
-    private String name;
-    private String city;
-    private String street;
-    private String zipcode;
 
-    // 예제니 모두 만들지만 setter()를 만들 때는 고민이 필요하다.
-    public String getStreet() {
-        return street;
-    }
+    @Column(name = "USERNAME")
+    private String username;
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+
+    // 자바 문법으로는 완전한 코드이지만, 런타인 에러이다.
+    // JpaMain > Hibernate mapping data 만드는 순간 터짐
+    @ManyToOne // Member N : Team 1
+    @JoinColumn(name = "TEAM_ID") // 매핑할 FK column
+    // fetch = FetchType.EAGER // Member를 가져올떄 Team도 즉시 채워라
+    private Team team;
 
     public Long getId() {
         return id;
@@ -29,29 +29,19 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getCity() {
-        return city;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setTeam(Team team) {
+        this.team = team;
     }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-
 }

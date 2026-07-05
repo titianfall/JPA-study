@@ -46,4 +46,14 @@ public class Member {
         team.getMembers().add(this);
     }
 
+    // ⚠️ 실습용: Team.toString()이 members를, Member.toString()이 team을 서로 호출
+    //    → 상호 무한 호출로 StackOverflowError 발생 (확인 후 team은 빼야 함)
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", team=" + team +
+                '}';
+    }
 }

@@ -2,6 +2,9 @@ package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,6 +14,10 @@ public class Member {
     private String city;
     private String street;
     private String zipcode;
+
+    // 만약 Member(1) 쪽에서 다(N)쪽의 정보인 Order 정보를 얻고 싶다.
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
     // 예제니 모두 만들지만 setter()를 만들 때는 고민이 필요하다.
     public String getStreet() {

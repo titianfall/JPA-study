@@ -2,24 +2,31 @@ package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MEMBER_ID") // 대소문자는 회사의 룰을 따르면 됨
     private Long id;
+    private String name;
+    private String city;
+    private String street;
+    private String zipcode;
 
-    @Column(name = "USERNAME")
-    private String username;
+    // 만약 Member(1) 쪽에서 다(N)쪽의 정보인 Order 정보를 얻고 싶다.
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
-//    @Column(name = "TEAM_ID")
-//    private Long teamId;
+    // 예제니 모두 만들지만 setter()를 만들 때는 고민이 필요하다.
+    public String getStreet() {
+        return street;
+    }
 
-    // 자바 문법으로는 완전한 코드이지만, 런타인 에러이다.
-    // JpaMain > Hibernate mapping data 만드는 순간 터짐
-    @ManyToOne // Member N : Team 1
-    @JoinColumn(name = "TEAM_ID") // 매핑할 FK column
-    // fetch = FetchType.EAGER // Member를 가져올떄 Team도 즉시 채워라
-    private Team team;
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     public Long getId() {
         return id;
@@ -29,31 +36,29 @@ public class Member {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
-    }
-    // 이름을 직관적으로 주어 강조
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
+    public String getCity() {
+        return city;
     }
 
-    // ⚠️ 실습용: Team.toString()이 members를, Member.toString()이 team을 서로 호출
-    //    → 상호 무한 호출로 StackOverflowError 발생 (확인 후 team은 빼야 함)
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                //", team=" + team +
-                '}';
+    public void setCity(String city) {
+        this.city = city;
     }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+
 }

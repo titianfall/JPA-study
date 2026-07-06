@@ -10,23 +10,15 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MEMBER_ID") // 대소문자는 회사의 룰을 따르면 됨
     private Long id;
-    private String name;
-    private String city;
-    private String street;
-    private String zipcode;
 
-    // 만약 Member(1) 쪽에서 다(N)쪽의 정보인 Order 정보를 얻고 싶다.
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+    @Column(name = "USERNAME")
+    private String username;
 
-    // 예제니 모두 만들지만 setter()를 만들 때는 고민이 필요하다.
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
+    // !!주인이 아니다.!! 읽기 전용으로 설정해야 한다.
+    // 일대다 관계에서 양방향 관계를 설정하고자 할때 하는 과정이다.
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    private Team team;
 
     public Long getId() {
         return id;
@@ -36,29 +28,11 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-
 }

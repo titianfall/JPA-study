@@ -2,15 +2,22 @@ package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-public class Item {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+public class Item{
+    @Id @GeneratedValue
     @Column(name = "ITEM_ID")
     private Long id;
 
     private String name;
     private int price;
     private int stockQuantity;
+
+    // 양방향 연관관계로 설정
+    @OneToMany(mappedBy = "item")
+    private List<CategoryItem> categoryItems = new ArrayList<>();
 
     public Long getId() {
         return id;

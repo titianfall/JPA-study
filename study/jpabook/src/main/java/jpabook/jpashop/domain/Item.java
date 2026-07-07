@@ -15,8 +15,9 @@ public class Item{
     private int price;
     private int stockQuantity;
 
-    @ManyToMany(mappedBy = "items")
-    private List<Category> categories = new ArrayList<>();
+    // 양방향 연관관계로 설정
+    @OneToMany(mappedBy = "item")
+    private List<CategoryItem> categoryItems = new ArrayList<>();
 
     public Long getId() {
         return id;

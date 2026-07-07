@@ -21,10 +21,8 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     private List<Category> child = new ArrayList<>();
 
-    // 다대다 item 과 category간의
-    @ManyToMany
-    @JoinTable(name = "CATEGORY_ITEM", joinColumns = @JoinColumn(name = "CATEGORY_ID"),
-                inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
-    )
-    private List<Item> items = new ArrayList<>();
+    // 및 양방향 연관관계로 설정
+    // 다대다를 중간 엔티티 CategoryItem을 통해 일대다/다대일로 분해
+    @OneToMany(mappedBy = "category")
+    private List<CategoryItem> categoryItems = new ArrayList<>();
 }

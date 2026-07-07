@@ -5,11 +5,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
-import jpabook.jpashop.domain.Team;
-
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -19,18 +14,6 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            Member member = new Member();
-            member.setUsername("member1");
-
-            em.persist(member);
-
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
-            // 왜래키가 업데이트 되어야함
-            em.persist(team);
-
-
             tx.commit();
         } catch(Exception e) {
             e.printStackTrace();

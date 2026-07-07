@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ManyToAny;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,22 @@ public class Member {
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
+
+    // 다대다 관계 실습 member - product
+    // @ManyToMany
+    // @JoinTable(name = "MEMEBER_PRODUCT") // 연결 테이블의 pk > fk 로 바꾸니느 구조
+    // private List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
+
+    public List<MemberProduct> getMemberProducts() {
+        return memberProducts;
+    }
+
+    public void setMemberProducts(List<MemberProduct> memberProducts) {
+        this.memberProducts = memberProducts;
+    }
 
     public Long getId() {
         return id;

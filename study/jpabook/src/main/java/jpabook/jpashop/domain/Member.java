@@ -1,39 +1,21 @@
 package jpabook.jpashop.domain;
 
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 @Entity
 public class Member extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "USERNAME")
-    private String username;
-
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
-    private Team team;
-
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
-
-    @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
-
-    public List<MemberProduct> getMemberProducts() {
-        return memberProducts;
-    }
-
-    public void setMemberProducts(List<MemberProduct> memberProducts) {
-        this.memberProducts = memberProducts;
-    }
+    private String name;
+    private String city;
+    private String street;
+    private String zipcode;
 
     public Long getId() {
         return id;
@@ -43,27 +25,35 @@ public class Member extends BaseEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
+    public String getCity() {
+        return city;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public Locker getLocker() {
-        return locker;
+    public String getStreet() {
+        return street;
     }
 
-    public void setLocker(Locker locker) {
-        this.locker = locker;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 }

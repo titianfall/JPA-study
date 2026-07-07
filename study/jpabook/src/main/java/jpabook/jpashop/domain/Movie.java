@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class Movie extends Item{
     private String director;
-    private String actor;
+    private String author;
 
     public String getDirector() {
         return director;
@@ -15,11 +15,11 @@ public class Movie extends Item{
         this.director = director;
     }
 
-    public String getActor() {
-        return actor;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setActor(String actor) {
-        this.actor = actor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

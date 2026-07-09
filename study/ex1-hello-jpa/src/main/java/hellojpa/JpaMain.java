@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -18,19 +19,33 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            Address address = new Address("city", "street", "10000");
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+            member.setWorkPeriod(new Period(LocalDateTime.now()));
 
-            Member member1 = new Member();
-            member1.setUsername("member1");
-            member1.setWorkPeriod(new Period(LocalDateTime.now()));
-            member1.setHomeAddress(address);
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
 
-            // 값 타입을 불변 객체로 선언하였는데, 실제로 값을 변경할 일이 생겼다고 가정하자.
-            // 여러 방법이 있지만 새로운 객체를 만들어 reference를 갈아 끼우는것도 하나의 방법이다.
-            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
-            member1.setHomeAddress(newAddress);
+            member.getAddressesHistory().add(new Address("old1", "street1", "20000"));
+            member.getAddressesHistory().add(new Address("old2", "street2", "30000"));
+            em.persist(member);
 
-            em.persist(member1);
+            em.flush();
+            em.clear();
+
+            System.out.println("========================= START ==================");
+            Member findMember = em.find(Member.class, member.getId());
+            List<Address> addressesHistory = findMember.getAddressesHistory();
+            for (Address address : addressesHistory) {
+                System.out.println(address.getCity());
+            }
+
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            for (String favoriteFood : favoriteFoods) {
+                System.out.println(favoriteFood);
+            }
 
             tx.commit();
         } catch(Exception e) {

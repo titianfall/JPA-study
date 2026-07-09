@@ -23,16 +23,15 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 이미 영속성 컨텍스트에 엔티티가 있는 경우에 대하여 - jpa 특성상 같은 트랜잭션 레벨 안에서 동일한 영속성 컨텍스트를 가져야한다.
-            // m1 이라는 엔티티로 db에서 조회하여 영속성 컨텍스트에 등록이 되었는데
-            Member m1 = em.find(Member.class, 1L);
-            System.out.println("m1 = " + m1.getClass());
-            // 프록시가 아닌 Hellojpa.Member 가 나옴
-            Member reference = em.getReference(Member.class, 1L);
-            System.out.println("reference = " + reference.getClass());
+            // 그럼 반대로 프록시가 먼저 영속성 컨텍스트에 반영되었을 경우에는?
+            Member reference = em.getReference(Member.class, member1.getId());
+            System.out.println("reference = " + reference.getClass()); // Proxy
 
-            System.out.println("m1 == reference " + (m1 == reference));
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("findMember = " + findMember.getClass()); // Member 일것같지만
 
+            // true 결과
+            System.out.println("reference == findMember : " + (reference.getClass() == findMember.getClass()));
             tx.commit(); // commit 시에 한번에 db로 flush 되고 commit 된다.
         } catch(Exception e) {
             e.printStackTrace();

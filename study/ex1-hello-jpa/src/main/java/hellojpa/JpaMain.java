@@ -3,7 +3,10 @@ package hellojpa;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -17,34 +20,35 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            Parent parent = new Parent();
-            parent.setName("Parent");
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity", "street1", "10000"));
+            member.setWorkPeriod(new Period(LocalDateTime.now()));
 
-            Child child1 = new Child();
-            child1.setName("Child1");
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
 
-            Child child2 = new Child();
-            child2.setName("Child2");
-
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            // persist를 3번이나 하게된다. 이걸 줄일수 있는 방법이 영속성 전이: cascade를 사용하는 방법이다.
-            em.persist(parent);
-            // cascade = CascadeType.ALL로 인한 생략
-//             em.persist(child1);
-//             em.persist(child2);
+            member.getAddressHistory().add(new AddressEntity("old1", "street2", "20000"));
+            member.getAddressHistory().add(new AddressEntity("old2", "street3", "30000"));
+            em.persist(member);
 
             em.flush();
             em.clear();
 
-            Parent findParent = em.find(Parent.class, parent.getId());
+            System.out.println("========================= START ==================");
+            Member findMember = em.find(Member.class, member.getId());
+            // 값 타입의 수정(update)
+            Address address = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", address.getStreet(), address.getZipcode()));
 
-            // 첫번째 자식을 없애본다. (orphanRemoval = true)
-            // findParent.getChildList().remove(0);
+            // 치킨 > 한식(delete(단일) > insert(신규)
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
 
-            em.remove(findParent); // cascade시에 orphanRemoval = true 생략이 가능하다. 전파가 되기 때문
-            findParent.getChildList().remove(0);
+            // 주소 수정( delete(전체) > insert(기존) > insert(신규)
+            findMember.getAddressHistory().remove(new AddressEntity("old1", "street1", "20000"));
+            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street4", "40000"));
 
             tx.commit();
         } catch(Exception e) {

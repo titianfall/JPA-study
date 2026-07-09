@@ -10,11 +10,11 @@ public class CategoryItem {
     private Long id;
 
     // 다대다 연관관계를 다대일, 일대다 연관관계로 찢음
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 

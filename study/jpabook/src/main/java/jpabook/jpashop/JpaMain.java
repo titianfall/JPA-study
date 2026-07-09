@@ -24,6 +24,14 @@ public class JpaMain {
             em.flush();
             em.clear();
 
+            // Inheritance(strategy = InheritanceType.SINGLE_TABLE) 전략으로 만들었기 때문에
+            // DTYPE = book 이고 ITEM 테이블에서 조회를 하게된다.
+            Book findBook = em.find(Book.class, book.getId());
+            System.out.println("findBook.getName() = " + findBook.getName());
+            System.out.println("findBook.getAuthor() = " + findBook.getAuthor());
+
+            em.remove(findBook);
+
             tx.commit();
         } catch(Exception e) {
             e.printStackTrace();

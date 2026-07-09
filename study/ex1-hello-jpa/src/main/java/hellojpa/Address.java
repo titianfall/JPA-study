@@ -2,6 +2,8 @@ package hellojpa;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Embeddable
 public class Address {
     private String city;
@@ -9,8 +11,6 @@ public class Address {
     @Column(name = "ZIPCODE")
     private String zipcode;
 
-    @Transient
-    private Member member;
 
     public Address() {
     }
@@ -23,10 +23,6 @@ public class Address {
 
     public String getCity() {
         return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public String getStreet() {
@@ -46,7 +42,21 @@ public class Address {
         this.zipcode = zipcode;
     }
 
-    private void setMember(Member member) {
-        this.member = member;
+    private void setCity(String city) {
+        this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(city, address.city) &&
+                Objects.equals(street, address.street) &&
+                Objects.equals(zipcode, address.zipcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(city, street, zipcode);
     }
 }

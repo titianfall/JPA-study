@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,15 +38,17 @@ public class JpaMain {
 
             System.out.println("========================= START ==================");
             Member findMember = em.find(Member.class, member.getId());
-            List<Address> addressesHistory = findMember.getAddressesHistory();
-            for (Address address : addressesHistory) {
-                System.out.println(address.getCity());
-            }
+            // 값 타입의 수정(update)
+            Address address = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", address.getStreet(), address.getZipcode()));
 
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for (String favoriteFood : favoriteFoods) {
-                System.out.println(favoriteFood);
-            }
+            // 치킨 > 한식(delete(단일) > insert(신규)
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
+            // 주소 수정( delete(전체) > insert(기존) > insert(신규)
+            findMember.getAddressesHistory().remove(new Address("old1", "street1", "20000"));
+            findMember.getAddressesHistory().add(new Address("newCity1", "street4", "40000"));
 
             tx.commit();
         } catch(Exception e) {

@@ -23,16 +23,20 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 그럼 반대로 프록시가 먼저 영속성 컨텍스트에 반영되었을 경우에는?
-            Member reference = em.getReference(Member.class, member1.getId());
-            System.out.println("reference = " + reference.getClass()); // Proxy
+            // 프록시 - 준영속 상태일때에 대하여
+            Member refMember = em.getReference(Member.class, member1.getId());
+            System.out.println("refMember = " + refMember.getClass()); // Proxy
 
-            Member findMember = em.find(Member.class, member1.getId());
-            System.out.println("findMember = " + findMember.getClass()); // Member 일것같지만
+            // 준영속으로 만드는 방법 - close(), detach(Entity), clear()
+            em.detach(refMember);
+            // em.close(); // 최신 버전에서는 트랜잭션이 끝날때 실제 자원 해제가 이루어져 에러가 안나게됨
+            // em.clear();
 
-            // true 결과
-            System.out.println("reference == findMember : " + (reference.getClass() == findMember.getClass()));
-            tx.commit(); // commit 시에 한번에 db로 flush 되고 commit 된다.
+            // detach(entity), clear() : could not initialize proxy - no Session
+            // close() : could not initialize proxy - the owning Session was closed
+            System.out.println("refMember.getUsername() = " + refMember.getUsername());
+
+            tx.commit();
         } catch(Exception e) {
             e.printStackTrace();
             tx.rollback();

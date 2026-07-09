@@ -33,15 +33,20 @@ public class Address {
         return street;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getZip() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZip(String zipcode) {
+    // private 으로 만드는건 선택 사항이다.
+    private void setStreet(String street) {
+        this.street = street;
+    }
+
+    private void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    private void setMember(Member member) {
+        this.member = member;
     }
 }

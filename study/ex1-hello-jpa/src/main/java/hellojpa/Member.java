@@ -11,7 +11,7 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne // Member N : Team 1
+    @ManyToOne(fetch = FetchType.LAZY) // LAZT : Member db 조회, Team 프록시 객체 초기화
     @JoinColumn(name = "TEAM_ID") // 매핑할 FK column
     // fetch = FetchType.EAGER // Member를 가져올떄 Team도 즉시 채워라
     private Team team;
@@ -35,17 +35,8 @@ public class Member {
     public Team getTeam() {
         return team;
     }
-    // 이름을 직관적으로 주어 강조
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                '}';
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

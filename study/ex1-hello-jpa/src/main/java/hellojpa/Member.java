@@ -33,12 +33,17 @@ public class Member {
     @Column(name = "FOOD_NAME") // 예외적으로 가능 - column 이 하나이기 때문
     private Set<String> favoriteFoods = new HashSet<>();
 
-    // 집 주소들
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "ADDRESS", joinColumns = {
-            @JoinColumn(name = "MEMBER_ID") // 왜래키로 인식
-    })
-    private List<Address> addressesHistory = new ArrayList<>();
+    // 집 주소들 - 값 타입 매핑
+//    @ElementCollection(fetch = FetchType.LAZY)
+//    @CollectionTable(name = "ADDRESS", joinColumns = {
+//            @JoinColumn(name = "MEMBER_ID") // 왜래키로 인식
+//    })
+//    private List<Address> addressesHistory = new ArrayList<>();
+
+    // 집 주소들 - entity 매핑
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "MEMBER_ID")
+    private List<AddressEntity> addressHistory = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -80,11 +85,11 @@ public class Member {
         this.favoriteFoods = favoriteFoods;
     }
 
-    public List<Address> getAddressesHistory() {
-        return addressesHistory;
+    public List<AddressEntity> getAddressHistory() {
+        return addressHistory;
     }
 
-    public void setAddressesHistory(List<Address> addresses) {
-        this.addressesHistory = addresses;
+    public void setAddressHistory(List<AddressEntity> addressHistory) {
+        this.addressHistory = addressHistory;
     }
 }

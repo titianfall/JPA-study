@@ -22,15 +22,15 @@ public class JpaMain {
         try{
             Member member = new Member();
             member.setUsername("member1");
-            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+            member.setHomeAddress(new Address("homeCity", "street1", "10000"));
             member.setWorkPeriod(new Period(LocalDateTime.now()));
 
             member.getFavoriteFoods().add("치킨");
             member.getFavoriteFoods().add("족발");
             member.getFavoriteFoods().add("피자");
 
-            member.getAddressesHistory().add(new Address("old1", "street1", "20000"));
-            member.getAddressesHistory().add(new Address("old2", "street2", "30000"));
+            member.getAddressHistory().add(new AddressEntity("old1", "street2", "20000"));
+            member.getAddressHistory().add(new AddressEntity("old2", "street3", "30000"));
             em.persist(member);
 
             em.flush();
@@ -47,8 +47,8 @@ public class JpaMain {
             findMember.getFavoriteFoods().add("한식");
 
             // 주소 수정( delete(전체) > insert(기존) > insert(신규)
-            findMember.getAddressesHistory().remove(new Address("old1", "street1", "20000"));
-            findMember.getAddressesHistory().add(new Address("newCity1", "street4", "40000"));
+            findMember.getAddressHistory().remove(new AddressEntity("old1", "street1", "20000"));
+            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street4", "40000"));
 
             tx.commit();
         } catch(Exception e) {

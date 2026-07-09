@@ -1,6 +1,7 @@
 package hellojpa;
 
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
 public class JpaMain {
 
@@ -15,26 +16,25 @@ public class JpaMain {
         tx.begin();
         try{
 
+            // 프록시 인스턴스 초기화 여부 확인
             Member member1 = new Member();
             member1.setUsername("member1");
-
             em.persist(member1);
 
             em.flush();
             em.clear();
 
-            // 프록시 - 준영속 상태일때에 대하여
             Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember = " + refMember.getClass()); // Proxy
+            // 프록시 클래스 확인법
+            System.out.println("refMember = " + refMember.getClass());
 
-            // 준영속으로 만드는 방법 - close(), detach(Entity), clear()
-            em.detach(refMember);
-            // em.close(); // 최신 버전에서는 트랜잭션이 끝날때 실제 자원 해제가 이루어져 에러가 안나게됨
-            // em.clear();
-
-            // detach(entity), clear() : could not initialize proxy - no Session
-            // close() : could not initialize proxy - the owning Session was closed
-            System.out.println("refMember.getUsername() = " + refMember.getUsername());
+            // 프록시 인스턴스의 초기화 여부 확인
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
+            // 프록시 강제 초기화
+            // refMember.getUsername(); // 방법 1
+            // 방법 2 - Hibernate 가 지원하는 것이지 JPA 표준에는 존재하지 않는다.
+            Hibernate.initialize(refMember);
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
 
             tx.commit();
         } catch(Exception e) {

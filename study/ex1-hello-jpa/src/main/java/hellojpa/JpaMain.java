@@ -32,16 +32,19 @@ public class JpaMain {
             // persist를 3번이나 하게된다. 이걸 줄일수 있는 방법이 영속성 전이: cascade를 사용하는 방법이다.
             em.persist(parent);
             // cascade = CascadeType.ALL로 인한 생략
-            // em.persist(child1);
-            // em.persist(child2);
+//             em.persist(child1);
+//             em.persist(child2);
 
             em.flush();
             em.clear();
 
             Parent findParent = em.find(Parent.class, parent.getId());
-            for(Child child : findParent.getChildList()){
-                System.out.println(child.getName());
-            }
+
+            // 첫번째 자식을 없애본다. (orphanRemoval = true)
+            // findParent.getChildList().remove(0);
+
+            em.remove(findParent); // cascade시에 orphanRemoval = true 생략이 가능하다. 전파가 되기 때문
+            findParent.getChildList().remove(0);
 
             tx.commit();
         } catch(Exception e) {

@@ -14,7 +14,7 @@ public class Parent {
 
     // 단일 엔티티에 종속적일 때, 라이프사이클이 동일할때 만 사용해야한다.
     // 다른 엔티티 예를 들어 member 테이블에서도 child 엔티티를 관리하게 된다면 사용하면 안된다.
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>();
 
     // 연관관계 편의 메서드

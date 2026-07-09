@@ -15,38 +15,23 @@ public class JpaMain {
         tx.begin();
         try{
 
-            Member member = new Member();
-            member.setUsername("hello");
-            Member member2 = new Member();
-            member2.setUsername("world");
+            Member member1 = new Member();
+            member1.setUsername("member1");
 
-            em.persist(member);
-            em.persist(member2);
+            em.persist(member1);
 
             em.flush();
             em.clear();
 
-            // em.find(): DB를 즉시 조회해서 실제 엔티티 반환
-            // em.getReference(): DB 조회를 미루는 프록시 반환 (이 시점엔 SELECT 없음)
-            // Member findMember = em.find(Member.class, 1L); // 이것만을 위해서도 select 쿼리가 나감
-            Member findMember = em.find(Member.class, member.getId());
-            Member findMember2 = em.getReference(Member.class, member2.getId());
-            System.out.println("findMember2.class = " + findMember2.getClass()); // 프록시 클래스
-            System.out.println("findMember2.id = " + findMember2.getId());
+            // 이미 영속성 컨텍스트에 엔티티가 있는 경우에 대하여 - jpa 특성상 같은 트랜잭션 레벨 안에서 동일한 영속성 컨텍스트를 가져야한다.
+            // m1 이라는 엔티티로 db에서 조회하여 영속성 컨텍스트에 등록이 되었는데
+            Member m1 = em.find(Member.class, 1L);
+            System.out.println("m1 = " + m1.getClass());
+            // 프록시가 아닌 Hellojpa.Member 가 나옴
+            Member reference = em.getReference(Member.class, 1L);
+            System.out.println("reference = " + reference.getClass());
 
-            System.out.println("findMember.username = " + findMember.getUsername()); // 이 시점에 초기화(SELECT)
-
-            // 타입체크에 대하여
-            System.out.println(findMember.getClass()); // class Hellojpa.Member
-            System.out.println(findMember2.getClass()); // class Hellojpa.Member$HibernateProxy$xxxx
-
-            // 클래스 비교
-            // false
-            System.out.println("findMember(find) == findMember2(ref) : " + (findMember.getClass() == findMember2.getClass()));
-
-            // instance of 비교 프록시는 Member를 상속하기 때문에 둘다 true가 된다.
-            System.out.println(findMember instanceof Member);
-            System.out.println(findMember2 instanceof Member);
+            System.out.println("m1 == reference " + (m1 == reference));
 
             tx.commit(); // commit 시에 한번에 db로 flush 되고 commit 된다.
         } catch(Exception e) {

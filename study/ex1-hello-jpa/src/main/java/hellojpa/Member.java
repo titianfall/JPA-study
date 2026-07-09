@@ -2,6 +2,9 @@ package hellojpa;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,10 +14,24 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY) // LAZT : Member db 조회, Team 프록시 객체 초기화
-    @JoinColumn(name = "TEAM_ID") // 매핑할 FK column
-    // fetch = FetchType.EAGER // Member를 가져올떄 Team도 즉시 채워라
-    private Team team;
+    // 기간 Period
+    @Embedded
+    private Period workPeriod;
+
+    // 주소
+    @Embedded
+    private Address homeAddress;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city",
+            column = @Column(name = "work_city")),
+            @AttributeOverride(name = "street",
+            column = @Column(name = "work_street")),
+            @AttributeOverride(name = "zipcode",
+            column = @Column(name = "work_zipcode"))
+    })
+    private Address workAddress;
 
     public Long getId() {
         return id;
@@ -32,11 +49,19 @@ public class Member {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
+    public Period getWorkPeriod() {
+        return workPeriod;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
     }
 }

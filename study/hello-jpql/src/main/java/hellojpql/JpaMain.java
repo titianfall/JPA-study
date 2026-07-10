@@ -29,29 +29,30 @@ public class JpaMain {
             em.clear();
 
             System.out.println("========================START============================");
-            String jpql = "select " +
-                            "case when m.age <= 10 then '학생요금' " +
-                            "      when m.age >=  60 then '경로요금' " +
-                            "else '일반요금' " +
-                            "end " +
-                            "from Member m";
-
+            String jpql = "select 'a' || 'b' From Member m";
+            // jpql = "select concat('a', 'b') from Member m";
             List<String> resultList = em.createQuery(jpql, String.class).getResultList();
-            for(String s : resultList){
-                System.out.println(s);
-            }
-
-            // 하나씩 조회하여 null이 아니면 반환
-            jpql = "select coalesce(m.username, '이름없는 회원') from Member m";
-            List<String> resultList1 = em.createQuery(jpql, String.class).getResultList();
-            for (String str : resultList1) {
+            for (String str :  resultList) {
                 System.out.println(str);
             }
 
-            // NULLIF 두 값이 같으면 null 반환, 다르면 첫번째 값 반환
-            jpql = "select NULLIF(m.username, '관리자') from Member m";
-            List<String> resultList2 = em.createQuery(jpql, String.class).getResultList();
-            for (String str : resultList2) {
+            jpql = "select subString(m.username, 2, 3) from Member m";
+            jpql = "select length(m.username) from Member m";
+            jpql = "select m from Member m where trim(m.username) = :username";
+            jpql = "select m from Member m where lower(m.username) = :username";
+            jpql = "select m from Member m where upper(m.username) = :username";
+            jpql = "select locate('de', 'abcdef') from Member m";
+            List<Integer> result = em.createQuery(jpql, Integer.class).getResultList();
+            jpql = "select index(t.members) from Team t";
+            jpql = "select m from Member m where abs(m.age - 30) < 5";
+            jpql = "select m from Member m where mode(m.age, 2) = 0";
+            jpql = "select m from Member m order by m.username asc";
+            jpql = "select m from Member m order by m.age desc";
+            jpql = "select lower(m.username) from Member m";
+
+            jpql = "select function('group_concat', m.username) from Member m"; // 관리자 1, 관리자 2
+            List<String> resultList1 = em.createQuery(jpql, String.class).getResultList();
+            for (String str :  resultList1) {
                 System.out.println(str);
             }
             tx.commit();

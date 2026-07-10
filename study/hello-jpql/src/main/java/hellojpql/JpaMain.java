@@ -27,23 +27,22 @@ public class JpaMain {
             em.clear();
 
             System.out.println("========================START============================");
-            // 조인 : 내부 조인, 외부 조인, 세타 조인
-            String jpql = "select m from Member m inner join m.team t";
-            List<Member> inner = em.createQuery(jpql, Member.class).getResultList();
+            String jpql = "select m from Member m where m.age > (select avg(m2.age) from Member m2)";
+            List<Member> subQuery1 = em.createQuery(jpql, Member.class).getResultList();
 
-            jpql = "select m from Member m left outer join m.team t";
-            List<Member> outer = em.createQuery(jpql, Member.class).getResultList();
+            jpql = "select m from Member m where (select count(o) from Order o where m = o.member) > 0";
+            List<Member> subQuery2 = em.createQuery(jpql, Member.class).getResultList();
 
-            // 연관관계 없는 엔티티 외부 조인이 가능하다.
-            jpql = "select count(m) from Member m, Team t where m.username = t.name";
-            List<Member> theta = em.createQuery(jpql, Member.class).getResultList();
-            System.out.println(theta.size());
+            jpql = "select m from Member m where exists (select t from m.team t where t.name = 'team 1')";
+            List<Member> subQuery3 = em.createQuery(jpql, Member.class).getResultList();
 
-            jpql = "select m from Member m left join m.team t on t.name = 'team 1'";
-            List<Member> joinOn = em.createQuery(jpql, Member.class).getResultList();
+            jpql = "select o from Order o where o.orderAmount > ALL(select p.stockAmount from Product p)";
+            List<Order> subQuery4 = em.createQuery(jpql, Order.class).getResultList();
 
-            jpql = "select m from Member m left join Team t on m.username = t.name";
-            List<Member> where = em.createQuery(jpql, Member.class).getResultList();
+            jpql = "select m from Member m where m.team = ANY (select t from Team t)";
+            List<Team> subQuery5 = em.createQuery(jpql, Team.class).getResultList();
+
+
             tx.commit();
         } catch(Exception e){
             e.printStackTrace();

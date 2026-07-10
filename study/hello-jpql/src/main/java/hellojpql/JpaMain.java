@@ -19,28 +19,27 @@ public class JpaMain {
             em.persist(team);
 
             Member member = new Member();
+            member.setUsername("member 1");
             member.changeTeam(team);
             member.setAge(10);
+            member.setType(MemberType.ADMIN);
             em.persist(member);
 
             em.flush();
             em.clear();
 
             System.out.println("========================START============================");
-            String jpql = "select m from Member m where m.age > (select avg(m2.age) from Member m2)";
-            List<Member> subQuery1 = em.createQuery(jpql, Member.class).getResultList();
-
-            jpql = "select m from Member m where (select count(o) from Order o where m = o.member) > 0";
-            List<Member> subQuery2 = em.createQuery(jpql, Member.class).getResultList();
-
-            jpql = "select m from Member m where exists (select t from m.team t where t.name = 'team 1')";
-            List<Member> subQuery3 = em.createQuery(jpql, Member.class).getResultList();
-
-            jpql = "select o from Order o where o.orderAmount > ALL(select p.stockAmount from Product p)";
-            List<Order> subQuery4 = em.createQuery(jpql, Order.class).getResultList();
-
-            jpql = "select m from Member m where m.team = ANY (select t from Team t)";
-            List<Team> subQuery5 = em.createQuery(jpql, Team.class).getResultList();
+            String jpql = "select m.username, 'HELLO', true from Member m " +
+                    // "where m.type = hellojpql.MemberType.ADMIN"; // 파라미터 바인딩으로 줄일수 있음
+                     "where m.type = :userType";
+            List resultList1 = em.createQuery(jpql)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+            Object o = (Object []) resultList1.get(0);
+            Object[] result =  (Object[]) o;
+            for(Object o1 : result){
+                System.out.println(o1);
+            }
 
 
             tx.commit();

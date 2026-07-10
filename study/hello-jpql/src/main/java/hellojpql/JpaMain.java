@@ -13,32 +13,30 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            Member member = new Member();
-            member .setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
 
+            for(int i = 0; i < 100; ++i){
+                Member member = new Member();
+                member .setUsername("member" + i);
+                member.setAge(i);
+                em.persist(member);
+            }
             em.flush();
             em.clear();
 
             System.out.println("========================START============================");
-            // 프로젝션 대상 : 엔티티 / 임베디드 타입 / 스칼라 타입
-            // 엔티티 프로젝션
-            em.createQuery("select m from Member m", Member.class);
-            // 묵시적 조인
-            List<Team> result = em.createQuery("select m.team from Member m", Team.class).getResultList();
+            // 페이징 두 api
+            // setFirstResult(int startPosition)
+            // setMaxResults(int maxResults)
 
-            // 임베디드 타입 프로젝션
-            List<Address> resultAddress = em.createQuery("select o.address from Order o", Address.class).getResultList();
+            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1) // offset ? rows
+                    .setMaxResults(10) // fetch first ? rows only
+                    .getResultList();
 
-            // 스칼라 타입 프로젝션
-            List resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
-            Object o = resultList.get(0);
-            Object[] resultObject = (Object[]) o;
-
-            System.out.println(resultObject[0]);
-            System.out.println(resultObject[1]);
-
+            System.out.println("result.size() = " + result.size());
+            for(Member m : result){
+                System.out.println(m);
+            }
             tx.commit();
         } catch(Exception e){
             e.printStackTrace();

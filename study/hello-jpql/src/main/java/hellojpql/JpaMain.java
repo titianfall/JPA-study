@@ -29,32 +29,20 @@ public class JpaMain {
             em.clear();
 
             System.out.println("========================START============================");
-            String jpql = "select 'a' || 'b' From Member m";
-            // jpql = "select concat('a', 'b') from Member m";
-            List<String> resultList = em.createQuery(jpql, String.class).getResultList();
-            for (String str :  resultList) {
-                System.out.println(str);
-            }
+            // 경로 표현식 (.)으로 객체 그래프 탐색
+            // 상태 필드(state field) : 경로 탐색의 끝, 탐색x
+            String jpql = "select m.username from Member m";
 
-            jpql = "select subString(m.username, 2, 3) from Member m";
-            jpql = "select length(m.username) from Member m";
-            jpql = "select m from Member m where trim(m.username) = :username";
-            jpql = "select m from Member m where lower(m.username) = :username";
-            jpql = "select m from Member m where upper(m.username) = :username";
-            jpql = "select locate('de', 'abcdef') from Member m";
-            List<Integer> result = em.createQuery(jpql, Integer.class).getResultList();
-            jpql = "select index(t.members) from Team t";
-            jpql = "select m from Member m where abs(m.age - 30) < 5";
-            jpql = "select m from Member m where mode(m.age, 2) = 0";
-            jpql = "select m from Member m order by m.username asc";
-            jpql = "select m from Member m order by m.age desc";
-            jpql = "select lower(m.username) from Member m";
+            // 단일 값 연관 필드 ( 묵시적 내부 조인 ), 탐색 o
+            jpql = "select m.team from Member m";
+            jpql = "select m.team.name from Member m";
 
-            jpql = "select function('group_concat', m.username) from Member m"; // 관리자 1, 관리자 2
-            List<String> resultList1 = em.createQuery(jpql, String.class).getResultList();
-            for (String str :  resultList1) {
-                System.out.println(str);
-            }
+            // 컬렉션 값 연관 경로 : 묵시적 내부 조인 발생, 탐색 X
+            jpql = "select t.members from Team t";
+            // jpql = "select t.members.username from Team t; // 불가능
+            // 그러나 from 절에 명시적 조인을 통해 탐색이 가능
+            jpql = "select t.members from Member m inner join m.team t";
+
             tx.commit();
         } catch(Exception e){
             e.printStackTrace();

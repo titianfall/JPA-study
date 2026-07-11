@@ -4,6 +4,8 @@
 
 ## 학습 정리 진행 상황
 
+📌 **[JPA 기본편 핵심 정리](study/docs/JPA%20기본편%20핵심%20정리.md)** — 전 챕터 통합 요약
+
 <details>
 <summary><b>자바 ORM 표준 JPA 프로그래밍 - 기본편</b> (02~10장 완료)</summary>
 

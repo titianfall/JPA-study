@@ -34,6 +34,14 @@
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
+
+        <!-- IntelliJ @Language 어노테이션 (JPQL 문자열 언어 주입용, 컴파일 시에만 필요) -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

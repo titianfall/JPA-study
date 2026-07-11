@@ -1,75 +1,40 @@
-# Hibernate ↔ Spring Boot 버전 호환 정리
+# JPA-study
 
-> `ex1-hello-jpa` 프로젝트를 나중에 Spring Boot로 옮길 때 참고용
-> 확인일: 2026-07-01 (Spring Boot 공식 dependency-versions 문서 기준)
+자바 ORM 표준 JPA 프로그래밍 강의를 들으며 직접 실습 코드를 작성하고, 챕터별로 학습 내용을 마크다운으로 정리하는 저장소.
 
-## 현재 pom.xml 의존성
+## 학습 정리 진행 상황
+
+<details>
+<summary><b>자바 ORM 표준 JPA 프로그래밍 - 기본편</b> (02~10장 완료)</summary>
+
+| # | 챕터 | 정리 |
+|---|------|------|
+| 02 | JPA 시작 | [02. JPA 시작.md](study/docs/02.%20JPA%20시작.md) |
+| 03 | 영속성 관리 | [03. 영속성 관리.md](study/docs/03.%20영속성%20관리.md) |
+| 04 | 엔티티 매핑 | [04. 엔티티 매핑.md](study/docs/04.%20엔티티%20매핑.md) |
+| 05 | 연관관계 매핑 기초 | [05. 연관관계 매핑 기초.md](study/docs/05.%20연관관계%20매핑%20기초.md) |
+| 06 | 다양한 연관관계 매핑 | [06. 다양한 연관관계 매핑.md](study/docs/06.%20다양한%20연관관계%20매핑.md) |
+| 07 | 고급 매핑 | [07. 고급 매핑.md](study/docs/07.%20고급%20매핑.md) |
+| 08 | 프록시와 연관관계 관리 | [08. 프록시와 연관관계 관리.md](study/docs/08.%20프록시와%20연관관계%20관리.md) |
+| 09 | 값 타입 | [09. 값 타입.md](study/docs/09.%20값%20타입.md) |
+| 10.1 | 객체지향 쿼리 언어 — 기본 문법 | [10.1 객체지향 쿼리 언어.md](study/docs/10.1%20객체지향%20쿼리%20언어.md) |
+| 10.2 | 객체지향 쿼리 언어 — 중급 문법 | [10.2 객체지향 쿼리 언어.md](study/docs/10.2%20객체지향%20쿼리%20언어.md) |
+
+</details>
+
+## 개발 환경
 
 | 항목 | 버전 |
 |------|------|
-| `org.hibernate:hibernate-core` | **6.4.2.Final** |
 | Java | 17 |
-| `com.h2database:h2` | 2.2.224 |
-| `javax.xml.bind:jaxb-api` | 2.3.1 |
+| Hibernate ORM | 6.4.2.Final |
+| H2 Database | 2.2.224 |
+| 빌드 | Maven |
+| JPA 패키지 | `jakarta.persistence.*` (강의 구버전은 `javax.persistence.*`) |
 
-## 핵심 결론
+## 참고: 나중에 Spring Boot로 옮길 때
 
-⚠️ **Spring Boot 어떤 버전도 Hibernate `6.4.2.Final`을 정확히 관리(BOM 고정)하지 않는다.**
-Spring Boot는 6.4.1 → (6.4.2 / 6.4.3 스킵) → 6.4.4 로 건너뛰었다.
-
-따라서 6.4.x 라인에서 가장 가까운 선택지는 아래 둘.
-
-| Spring Boot | 관리하는 Hibernate ORM | H2 | 비고 |
-|-------------|----------------------|-----|------|
-| **3.2.2** | 6.4.1.Final | 2.2.224 | 현재보다 patch 한 단계 **낮음** |
-| **3.2.3** | 6.4.4.Final | 2.2.224 | 현재보다 patch 몇 단계 **높음** |
-
-- H2 `2.2.224`는 Spring Boot 3.2.2 / 3.2.3 모두 동일하게 관리 → 현재 pom과 일치 ✅
-- Java 17은 Spring Boot 3.x 최소 요구사항(17+)과 일치 ✅
-
-## 권장 방향
-
-### 1. 정확한 버전 매칭은 사실상 불필요
-스터디 목적이면 Hibernate patch 버전 하나(6.4.1 vs 6.4.2 vs 6.4.4)는 기능 차이가 거의 없다.
-**6.4.x 라인의 Spring Boot 3.2.x 아무거나** 쓰면 된다. (3.2.2 또는 3.2.3 권장)
-
-### 2. Spring Boot로 옮길 때는 Hibernate 버전을 직접 명시하지 않는다
-스타터가 알아서 호환 버전을 끌어온다. `hibernate-core`, `h2` 버전 태그를 **지워야** BOM이 관리한다.
-
-```xml
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.3</version>   <!-- 또는 3.2.2 -->
-    <relativePath/>
-</parent>
-
-<properties>
-    <java.version>17</java.version>
-</properties>
-
-<dependencies>
-    <!-- hibernate-core 6.4.x 를 자동으로 가져옴 (버전 명시 X) -->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-    <!-- H2 (버전도 부트가 관리) -->
-    <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <scope>runtime</scope>
-    </dependency>
-</dependencies>
-```
-
-### 3. 학습 흐름 참고
-- **JPA 기본편(이 프로젝트)** = 순수 JPA → Spring Boot 없이 진행하는 게 정석
-- 다음 단계(스프링 데이터 JPA / 활용편)에서 Spring Boot 도입
-- 그때는 "이 Hibernate와 똑같이"보다 **최신 안정 부트 버전** 사용이 일반적
-
-## 출처
-- [Spring Boot 3.2.2 Dependency Versions](https://docs.spring.io/spring-boot/docs/3.2.2/reference/html/dependency-versions.html) → Hibernate 6.4.1.Final
-- [Spring Boot 3.2.3 Dependency Versions](https://docs.spring.io/spring-boot/docs/3.2.3/reference/html/dependency-versions.html) → Hibernate 6.4.4.Final
-- [Spring Boot 3.2 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.2-Release-Notes)
+- Spring Boot BOM은 Hibernate 6.4.2를 정확히 고정하는 버전이 없다 (3.2.2 → 6.4.1, 3.2.3 → 6.4.4).
+- 스터디 목적이면 patch 차이는 무의미 — **Spring Boot 3.2.x 아무거나** 쓰면 된다.
+- 옮길 때는 `hibernate-core`, `h2` 버전 태그를 지우고 `spring-boot-starter-data-jpa`가 관리하게 둔다.
+- 다음 단계(스프링 데이터 JPA / 활용편)에서는 그냥 **최신 안정 부트 버전** 사용이 일반적.

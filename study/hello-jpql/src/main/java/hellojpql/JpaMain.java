@@ -1,6 +1,7 @@
 package hellojpql;
 
 import jakarta.persistence.*;
+import org.intellij.lang.annotations.Language;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,67 +45,28 @@ public class JpaMain {
             em.clear();
 
             System.out.println("========================START============================");
-//            // 영속성 컨텍스트와 프록시에 대한 이해
-//            String jpql = "select m from Member m";
-//            List<Member> resultList = em.createQuery(jpql, Member.class).getResultList();
-//            for (Member member : resultList) {
-//                // 회원1, 팀A(SQL)
-//                // 회원2, 팀A(1차 캐시 - 영속성 컨텍스트)
-//                // 회원3, x (NPE 에러 조심)
-//                // if) 회원3, 팀B(SQL) > 결과적으로 쿼리가 1 + 2 번 나갔다. 만약 회원이 100명인데 모두 팀이 다르다면? 100방 쿼리가 나간다.
-//                // 이때 N + 1 문제가 발생한다.
-//                System.out.println(member.getUsername()); // 프록시에서 reference = Member(진짜 엔티티 객체) 연결
-//                System.out.println(member.getTeam()); // db 에서 Team 엔티티 1차캐시에 저장, null 반환(회원3)
-//                                    // member.getTeam().getName() >> NPE
-//            }
-//
-//            // fetch join - jpql 성능 최적화를 위해 제공하는 기능
-//            String sql = "select m.*, t.* from Member m inner join Team t on m.TEAM_ID = t.id";
-//            // 회원을 조회하면서 연관된 팀도 함께 조회(SQL 한 번에) - fetch = fetchType.LAZY
-//            jpql = "select m from Member m join fetch m.team"; // Member m (inner) join Team t (프록시 없음)
-//            List<Member> result = em.createQuery(jpql, Member.class).getResultList();
-//
-//            for (Member member : result) {
-//                System.out.println(member.getUsername() + " " +  member.getTeam().getName());
-//            }
+            // fetch join 한계
+            // fetch join 대상에는 별칭(alias) 를 줄수없다. Hibernate는 가능하나, 가급적 사용하지 말것
+            String jpql = "select t from Team t"; // 별명을 사용할 경우 객체 그래프의 사상과 맞지 않다.
+            List<Team> resultList = em.createQuery(jpql, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(2)
+                    .getResultList();
 
-//            // collection fetch join - oneToMany 관계
-//            String sql = "select t.*, m.* from Team t inner join Member m on t.TEAM_ID = m.TEAM_ID";
-//            String jpql = "select distinct t from Team t join fetch t.members";
-//            // 쿼리는 반드시 DB로 조회된다. 1차 캐시 외의 만족값이 DB에 존재할 수 있기 때문
-//            List<Team> resultList2 = em.createQuery(jpql, Team.class).getResultList();
-//
-//            for (Team team : resultList2) {
-//                // hibernate 6. 부터는 distinct 를 안써도 컬렉션 페치 조인 시 같은 식별자 엔티티를 자동으로 중복 제거한다.
-//                // 데이터가 뻥튀기 되지 않는 이유다. (DB row 는 여전히 2줄, 엔티티로 조립할 때 걸러진다)
-//                System.out.println("team = " + team.getName() + " | members = " + team.getMembers().size());
-//                for (Member member : team.getMembers()) {
-//                    System.out.println("member | username= " + member.getUsername() + " | name= " + member.getTeam().getName());
-//                }
-//            }
-//
-//            // DB row 뻥튀기를 눈으로 확인 - 스칼라 프로젝션은 엔티티 조립(중복 제거)을 거치지 않는다.
-//            // 페치 조인 대상에는 별칭을 못 쓰므로 일반 join 으로 조회.
-//            // size(컬렉션) : 컬렉션의 크기를 반환하는 JPQL 함수 (SQL 에서는 서브쿼리로 번역됨)
-//            String scalarJpql = "select t.id, t.name, size(t.members) from Team t join t.members m";
-//            List<Object[]> rows = em.createQuery(scalarJpql, Object[].class).getResultList();
-//
-//            for (Object[] row : rows) {
-//                // Object[] 의 각 칸 = SELECT 절에 나열한 항목 (테이블 칼럼이 아님)
-//                System.out.println("team = " + row[1] + " | members.size() = " + row[2]);
-//            }
-
-            // 근데 일반 조인과 다른점은 무엇인가?
-            String sql = "select t.* from Team t inner join Member m on t.id = m.MEMBER_ID where t.name = '팀A'";
-            String jpql = "select t From Team t join t.members m"; // 쿼리를 살펴보면 team에 대한 칼럼만 가지고 온다 + 일대다 쿼리에 따른 뻥튀기
-            List<Team> resultList3 = em.createQuery(jpql, Team.class).getResultList();
-            for (Team team : resultList3) {
-                System.out.println("team = " + team.getName() + " | members = " + team.getMembers().size());
-                List<Member> members = team.getMembers(); //
-                for (Member member : members) {
-                    System.out.println(member.getUsername() + " | member = " + member.getTeam().getName());
-                }
+            for (Team team : resultList) {
+                System.out.println(team.getName());
+                team.getMembers().forEach(member -> System.out.println(member));
             }
+            // 둘 이상의 컬렉션은 페치 조인 할 수 없다.
+            // 일대다 x 일대다 를 페치조인할 경우 뻥튀기가 일어남
+
+            // 컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다.
+            // teamA는 2명의 회원을 가졌는데 페치 조인을 1개만 설정하면?
+            // 실제 2명의 회원이 아닌 단 한명의 정보만 JPA 입장에서는 회원이 한명밖에 없다고 판단하게 된다.
+            // 이럴 경우 팀멤버에 대해 쿼리를 db에 계속 날리게 되는데 이를 해결하기 위해
+            // @BatchSize(size = 1000) 1000이하의 값을 넣어줄 경우 N + 1 쿼리를 해결할 수 있다.
+            // 이를 persistence.xml에 등록하여 전역 설정으로 사용한다.
+
             tx.commit();
         } catch(Exception e){
             e.printStackTrace();

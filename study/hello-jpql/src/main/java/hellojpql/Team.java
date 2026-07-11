@@ -2,6 +2,7 @@ package hellojpql;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Team {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "team")
+    // @BatchSize(size=100) // 글로벌 설정 >> persistance.xml hibernate.default_batch_fetch_size value = "100"
     private List<Member> members = new ArrayList<Member>();
 
     public Long getId() {

@@ -2,6 +2,10 @@ package hellojpql;
 
 import jakarta.persistence.*;
 @Entity
+@NamedQuery(
+        name = "Member.findByUsername",
+        query = "select m from Member m where m.username = :username"
+) // em.createNamedQuery("Member.findByUsername", Member.class).setParameter("username", "회원1").getResultList();
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

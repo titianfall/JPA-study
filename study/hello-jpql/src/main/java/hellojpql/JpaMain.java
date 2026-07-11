@@ -45,27 +45,45 @@ public class JpaMain {
             em.clear();
 
             System.out.println("========================START============================");
-            // fetch join 한계
-            // fetch join 대상에는 별칭(alias) 를 줄수없다. Hibernate는 가능하나, 가급적 사용하지 말것
-            String jpql = "select t from Team t"; // 별명을 사용할 경우 객체 그래프의 사상과 맞지 않다.
-            List<Team> resultList = em.createQuery(jpql, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
+            // 다형성 쿼리
+            String sql = "select i from Item i where i.DTYPE = 'B' and i.author = 'kim'";
+            // String jpql = "select i from Item i where treat(i as Book).author = 'kim'";
+
+            // 엔티티 직접 사용
+            String jpql = "select count(m.id) from Member m"; // 일반적인 사용법
+            jpql = "select count(m) from Member m"; // sql에서 해당 엔티티의 기본값을 사용 m.id
+            // 둘다 같은 다음 SQL 실행
+            sql = "select count(m.id) as cnt from Member m";
+
+//            // 엔티티를 파라미터로 전달
+//            jpql = "select m from Member m where m = :member";
+//            List<Member> resultList = em.createQuery(jpql, Member.class)
+//                    .setParameter("member", member1)
+//                    .getResultList();
+//
+//            // 식별자를 직접 전달 - 식별자(Long)를 넘길 때는 비교 대상도 m.id 여야 한다
+//            // (m = :memberId 에 Long 을 바인딩하면 QueryArgumentException: Long != Member 타입 불일치)
+//            jpql = "select m from Member m where m.id = :memberId";
+//            List<Member> resultList2 = em.createQuery(jpql, Member.class)
+//                    .setParameter("memberId", member1.getId())
+//                    .getResultList();
+//
+//            // 둘다 같은 SQL 실행
+//            sql = "select m.* from Member m where m.MEMBER_ID = ?";
+//
+//            jpql = "select m from  Member m where m.team = :team"; // :team, :teamId
+//            List<Member> members = em.createQuery(jpql, Member.class)
+//                    .setParameter("team", teamA.getId()) // teamA
+//                    .getResultList();
+//            for (Member member : members) {
+//                System.out.println(member);
+//            }
+
+            // Named 쿼리 - 쿼리 재활용, 정적 쿼리, 어노테이션 or XML 정의가능
+            // 애플리케이션 로딩 시점에 초기화 후 재사용 가능 - 파싱 및 캐시로 가져오기 때문에 cost가 없음 + 검증 가능
+            List<Member> resultList1 = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", member1.getUsername())
                     .getResultList();
-
-            for (Team team : resultList) {
-                System.out.println(team.getName());
-                team.getMembers().forEach(member -> System.out.println(member));
-            }
-            // 둘 이상의 컬렉션은 페치 조인 할 수 없다.
-            // 일대다 x 일대다 를 페치조인할 경우 뻥튀기가 일어남
-
-            // 컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다.
-            // teamA는 2명의 회원을 가졌는데 페치 조인을 1개만 설정하면?
-            // 실제 2명의 회원이 아닌 단 한명의 정보만 JPA 입장에서는 회원이 한명밖에 없다고 판단하게 된다.
-            // 이럴 경우 팀멤버에 대해 쿼리를 db에 계속 날리게 되는데 이를 해결하기 위해
-            // @BatchSize(size = 1000) 1000이하의 값을 넣어줄 경우 N + 1 쿼리를 해결할 수 있다.
-            // 이를 persistence.xml에 등록하여 전역 설정으로 사용한다.
 
             tx.commit();
         } catch(Exception e){

@@ -1,25 +1,31 @@
-# CLAUDE.md — JPA 기본편 학습 정리 규칙
+# CLAUDE.md — 김영한 JPA 로드맵 학습 정리 규칙
 
-이 저장소는 **김영한 「JPA 기본편」** 강의를 들으며 직접 코드를 작성하고,
+이 저장소는 김영한 JPA 로드맵 강의를 들으며 직접 코드를 작성하고,
 각 챕터를 마크다운으로 정리해 나가는 학습용 repo다.
+
+- **기본편**: 자바 ORM 표준 JPA 프로그래밍 — ✅ 완료
+- **활용 1편**: 실전! 스프링 부트와 JPA 활용 1편 — 🚧 진행 중
 
 ## 학습 정리 작업 트리거
 
 사용자가 아래와 같은 요청을 하면 **이 규칙대로 학습 정리 마크다운을 작성**한다.
 
 - "N장 정리해줘", "OO 챕터 정리해줘", "지금까지 배운 내용 정리해줘"
-- "`jpa-기본편 NN. 제목.pdf` 기반으로 정리해줘" 등
+- "`N. 제목.pdf` 기반으로 정리해줘" 등
 
 ## 정리 규칙 (반드시 이 형식 유지)
 
-1. **위치 / 파일명**
-   - `study/docs/` 디렉토리에 생성한다.
-   - 파일명은 PDF와 동일하게 `NN. 제목.md` (예: `03. 영속성 관리.md`).
-   - 대응 PDF 위치: `jpa-v20241003/NN. 제목.pdf` (git 무시 대상).
+1. **위치 / 파일명** — 강의별로 구분한다.
+
+   | 강의 | 정리 md 위치 | PDF 강의자료 위치 (git 무시) | 실습 코드 |
+   |------|-------------|------------------------------|-----------|
+   | 기본편 | `study/docs/jpaBasic/` | `강의자료/JPA 기본편 - 강의자료/` | `study/jpaBasic/` (ex1-hello-jpa, hello-jpql, jpabook) |
+   | 활용 1편 | `study/docs/SpringBootJPA/` | `강의자료/Spring Boot 와 JPA 활용 - 1/` | `study/SpringBootJPA/jpashop` |
+
+   - 파일명은 PDF와 동일하게 `NN. 제목.md` (예: `01. 프로젝트 환경설정.md`).
 
 2. **정리 소스 (우선순위)**
-   - ① **내가 직접 작성한 코드와 주석** (`study/ex1-hello-jpa/src/...`) — 가장 우선.
-     내 코드 스니펫과 주석을 실제로 인용해서 설명한다.
+   - ① **내가 직접 작성한 코드와 주석** — 가장 우선. 내 코드 스니펫과 주석을 실제로 인용해서 설명한다.
    - ② 해당 챕터 **PDF 강의자료** 내용.
    - 둘을 결합하되, **"꼭 알아야 하는 핵심"만** 추린다. 슬라이드 전체 복붙 금지.
 
@@ -28,19 +34,36 @@
    - 섹션마다 `##` 헤딩, 표·코드블록·다이어그램 적극 활용.
    - `⚠️` 주의사항, `💡` 팁, `✅ 핵심 요약` 섹션으로 강조.
    - 내 실제 코드와 강의(구버전)의 차이가 있으면 명시
-     (예: `javax.persistence` → `jakarta.persistence`, `long id` vs `Long id`).
+     (예: `javax.persistence` → `jakarta.persistence`, JUnit4 → JUnit5, 부트 2.x → 3.x).
    - 서술은 한국어.
-   - 참고 형식: 완성 예시는 `02. JPA 시작.md` 를 그대로 템플릿으로 삼는다.
+   - 참고 템플릿: 기본편은 `study/docs/jpaBasic/02. JPA 시작.md`,
+     활용 1편은 `study/docs/SpringBootJPA/01. 프로젝트 환경설정.md`.
+   - 스프링 기초 개념이 나오면 [spring-study/issues](https://github.com/titianfall/spring-study/tree/main/issues) 링크로 연결한다.
 
-4. **커밋**
-   - 사용자가 커밋/푸시를 요청하면 **한 커밋으로 묶어서** 처리한다.
-   - 커밋 메시지 예: `docs: NN. 제목 학습 정리` (한국어 요약 허용).
+4. **브랜치 / 커밋 / PR 워크플로우**
+   - 챕터 단위로 `feature/NN-제목` 브랜치를 만들어 작업한다 (예: `feature/01-initalize-repo`).
+   - 커밋 메시지는 **한 줄**, `feat: ...` / `docs: ...` / `chore: ...` 형식 (한국어 요약 허용). 트레일러(Co-Authored-By 등) 금지.
+   - 실습 코드와 학습 정리 md는 **커밋을 분리**한다.
+   - 챕터 완료 시 PR을 만들어 main에 머지하고, 머지 후 로컬 브랜치는 삭제한다.
 
 ## 진행 계획 (챕터 목록)
 
+### 활용 1편 — 실전! 스프링 부트와 JPA 활용 1
+
 | # | 제목 | 정리 상태 |
 |---|------|-----------|
-| 01 | JPA 소개 | (선택) |
+| 1 | 프로젝트 환경설정 | ✅ `01. 프로젝트 환경설정.md` |
+| 2 | 도메인 분석 설계 | |
+| 3 | 애플리케이션 구현 준비 | |
+| 4 | 회원 도메인 개발 | |
+| 5 | 상품 도메인 개발 | |
+| 6 | 주문 도메인 개발 | |
+| 7 | 웹 계층 개발 | |
+
+### 기본편 — 자바 ORM 표준 JPA 프로그래밍 (완료)
+
+| # | 제목 | 정리 상태 |
+|---|------|-----------|
 | 02 | JPA 시작 | ✅ `02. JPA 시작.md` |
 | 03 | 영속성 관리 | ✅ `03. 영속성 관리.md` |
 | 04 | 엔티티 매핑 | ✅ `04. 엔티티 매핑.md` |
@@ -49,11 +72,19 @@
 | 07 | 고급 매핑 | ✅ `07. 고급 매핑.md` |
 | 08 | 프록시와 연관관계 관리 | ✅ `08. 프록시와 연관관계 관리.md` |
 | 09 | 값 타입 | ✅ `09. 값 타입.md` |
-| 10 | 객체지향 쿼리 언어 | ✅ `10.1 객체지향 쿼리 언어.md` (기본 문법), `10.2 객체지향 쿼리 언어.md` (중급 문법) |
+| 10 | 객체지향 쿼리 언어 | ✅ `10.1`, `10.2 객체지향 쿼리 언어.md` |
 
-> 새 챕터 정리를 완료하면 이 표의 상태를 `✅ 파일명` 으로 갱신한다.
+> 새 챕터 정리를 완료하면 이 표의 상태를 `✅ 파일명` 으로 갱신하고, README.md의 진행 상황 표도 함께 갱신한다.
 
 ## 프로젝트 메모
-- 실습 코드 모듈: `study/ex1-hello-jpa` (Maven, Java 17, Hibernate 6.x, H2)
-- 최신 버전이라 JPA 표준 패키지는 `jakarta.persistence.*` 사용.
-- 버전 호환 참고: `README.md` (Hibernate ↔ Spring Boot 정리).
+
+### 활용 1편 — `study/SpringBootJPA/jpashop`
+- Gradle(Groovy), Spring Boot 3.5.16, Java 17, H2
+- 의존성: web, thymeleaf, data-jpa, h2, lombok, validation, p6spy(쿼리 파라미터 로그)
+- 설정 파일: `application.yml` (강의 기준. properties 아님)
+- 실행 전 H2 TCP 서버 필요: `h2/bin/h2.bat` (접속 URL `jdbc:h2:tcp://localhost/~/jpashop`)
+- 강의 영상은 부트 2.x — 정리 시 3.x 차이점(`jakarta.persistence`, JUnit5, `org.hibernate.orm.jdbc.bind: trace` 등)을 명시한다.
+
+### 기본편 — `study/jpaBasic`
+- Maven, Java 17, Hibernate 6.x, H2. 순수 JPA (`persistence.xml`).
+- JPA 표준 패키지는 `jakarta.persistence.*` 사용.

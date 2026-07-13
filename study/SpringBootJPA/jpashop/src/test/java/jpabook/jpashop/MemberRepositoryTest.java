@@ -16,8 +16,8 @@ public class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    @Transactional
-    @Rollback(false)
+    @Transactional // @Rollback(true) 기본
+    @Rollback(false) // 테스트가 실행되면 기본적으로 Rollback 되도록 되어있기 때문에 false를 통해 실행하면 db에서 조회가 가능하다.
     public void testMember() {
         // given
         Member member = new Member();
@@ -27,7 +27,7 @@ public class MemberRepositoryTest {
         Long savedId = memberRepository.save(member);
         Member findMember = memberRepository.find(savedId);
 
-        // then
+        // then - 검증만
         assertThat(findMember.getId()).isEqualTo(member.getId());
         assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
         assertThat(findMember).isEqualTo(member); // JPA 엔티티 동일성 보장

@@ -10,6 +10,7 @@ public class HelloController {
     @GetMapping("hello")
     public String hello(Model model){
         model.addAttribute("data", "hello!!");
-        return "hello"; // template/hello.html
+        // thymeleaf : prefix templates/ + {viewName} + .html
+        return "hello"; // templates/hello.html
     }
 }

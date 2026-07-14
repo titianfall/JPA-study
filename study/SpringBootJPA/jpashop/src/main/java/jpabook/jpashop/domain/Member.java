@@ -11,7 +11,7 @@ import java.util.List;
 @Getter @Setter // 단 @Setter는 필요한 경우에만 작접 선언하여 사용하는 것이 올바르다.
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
     private String name;

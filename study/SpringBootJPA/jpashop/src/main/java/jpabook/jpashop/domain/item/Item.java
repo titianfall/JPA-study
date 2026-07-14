@@ -14,7 +14,7 @@ import java.util.List;
 @Getter @Setter
 public abstract class Item {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "item_id")
     private Long id;
 

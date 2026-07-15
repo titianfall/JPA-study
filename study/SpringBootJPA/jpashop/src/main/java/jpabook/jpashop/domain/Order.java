@@ -1,7 +1,9 @@
 package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id @GeneratedValue
@@ -50,5 +53,52 @@ public class Order {
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
         delivery.setOrder(this);
+    }
+
+    // == 생성 메서드 == // - 앞으로 생성시에도 해당 부분만 수정하면 된다.
+//    protected Order() {
+//
+//    }
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for(OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setOrderStatus(OrderStatus.ORDER); // 첫 주문은 주문 상태로 강제
+        order.setOrderDate(LocalDateTime.now());
+
+        return order;
+    }
+
+    // == 비즈니스 로직 == //
+    /**
+     * 주문 취소
+     * 1. 배송이 완료되었을 경우에는 주문 취소가 불가능하다.
+     * 2. 주문 취소에 따른 주문 개수 원상복구
+     */
+    public void cancel() {
+        if(delivery.getDeliveryStatus() == DeliveryStatus.COMP) {
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+
+        this.setOrderStatus(OrderStatus.CANCEL);
+        for(OrderItem orderItem : orderItems) {
+            orderItem.cancel(); // 상품 개수 원상 복구
+        }
+    }
+
+    // == 조회 로직 == //
+    /**
+     * 전체 주문 가격 조회
+     */
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for(OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+        // return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
     }
 }

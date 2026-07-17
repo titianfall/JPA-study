@@ -1,11 +1,11 @@
 # JPA-study
 
 - **1단계**: 자바 ORM 표준 JPA 프로그래밍 - 기본편 ✅ 완료
-- **2단계**: 실전! 스프링 부트와 JPA 활용 1편 🚧 진행 중
+- **2단계**: 실전! 스프링 부트와 JPA 활용 1편 ✅ 완료
 
 ## 학습 정리 진행 상황
 
-### 실전! 스프링 부트와 JPA 활용 1편 (진행 중)
+### 실전! 스프링 부트와 JPA 활용 1편 (완료)
 
 📌 **[JPA 활용 1편 핵심 정리](study/docs/SpringBootJPA/JPA%20활용%201편%20핵심%20정리.md)** — 전 챕터 통합 요약
 실습 코드: [`study/SpringBootJPA/jpashop`](study/SpringBootJPA/jpashop)

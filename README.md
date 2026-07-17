@@ -17,7 +17,7 @@
 | 04 | 회원 도메인 개발 | [04. 회원 도메인 개발.md](study/docs/SpringBootJPA/04.%20회원%20도메인%20개발.md) |
 | 05 | 상품 도메인 개발 | [05. 상품 도메인 개발.md](study/docs/SpringBootJPA/05.%20상품%20도메인%20개발.md) |
 | 06 | 주문 도메인 개발 | [06. 주문 도메인 개발.md](study/docs/SpringBootJPA/06.%20주문%20도메인%20개발.md) |
-| 07 | 웹 계층 개발 | |
+| 07 | 웹 계층 개발 | [07. 웹 계층 개발.md](study/docs/SpringBootJPA/07.%20웹%20계층%20개발.md) |
 
 ### 자바 ORM 표준 JPA 프로그래밍 - 기본편 (완료)
 

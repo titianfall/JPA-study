@@ -62,7 +62,7 @@ public class OrderRepository {
             } else {
                 jpql += " and";
             }
-            jpql += " m.memberName = :memberName";
+            jpql += " m.name = :memberName";
         }
 
         TypedQuery<Order> query = em.createQuery(jpql, Order.class)
@@ -98,7 +98,7 @@ public class OrderRepository {
         // 회원 이름 검색
         if (StringUtils.hasText(orderSearch.getMemberName())) {
             Predicate name =
-                    cb.like(m.<String>get("memberName"), "%" + orderSearch.getMemberName() + "%");
+                    cb.like(m.<String>get("name"), "%" + orderSearch.getMemberName() + "%");
             criteria.add(name);
         }
 
@@ -136,7 +136,7 @@ public class OrderRepository {
      *
      * private BooleanExpression nameLike(String nameCond) {
      *     if (!StringUtils.hasText(nameCond)) return null;
-     *     return QMember.member.memberName.like(nameCond);
+     *     return QMember.member.name.like(nameCond);
      * }
      */
 }

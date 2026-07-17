@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Delivery;
+import jpabook.jpashop.domain.DeliveryStatus;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
@@ -8,6 +9,7 @@ import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class OrderService {
         // 배송정보 생성
         Delivery delivery = new Delivery(); // cascade 옵션에 의해 강제 em.persist
         delivery.setAddress(member.getAddress());
+        delivery.setDeliveryStatus(DeliveryStatus.READY); // 주문 시 배송은 준비 상태로 시작
 
         // 주문상품 생성 ( static constructor method )
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
@@ -63,8 +66,8 @@ public class OrderService {
     }
 
     // 검색
-/*    public List<Order> findOrders(OrderSearch orderSearch) {
-        return orderRepository.findAll(orderSearch);
+    // findAll()은 검색 조건을 무시하고 전체를 조회한다. 동적 조건이 동작하는 건 findAllByString()이다.
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAllByString(orderSearch);
     }
-*/
 }

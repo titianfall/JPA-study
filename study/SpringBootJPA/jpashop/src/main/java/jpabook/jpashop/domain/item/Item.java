@@ -29,6 +29,15 @@ public abstract class Item {
     // == 비즈니스 로직 == //
 
     /**
+     * 상품 정보 변경 - setter 대신 의미있는 메서드로 변경 지점을 모은다.
+     */
+    public void change(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
+    /**
      * stock 증가
      */
     public void addStock(int quantity) {

@@ -47,6 +47,6 @@ public class MemberController {
         // 간단한 예제이기 때문에 Entity를 그대로 뿌리기보다는 DTO로 변환해서 뿌려야한다.
         List<Member> members = memberService.findMembers();
         model.addAttribute("members", members);
-        return "/members/memberList";
+        return "members/memberList";
     }
 }

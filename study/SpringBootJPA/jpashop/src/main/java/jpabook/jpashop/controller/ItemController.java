@@ -26,7 +26,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/new")
-    public String craete(BookForm form) {
+    public String create(BookForm form) {
 
         // setter는 설정하지 말고 createBook() 처럼 setter를 닫고 해야함
         Book book = new Book();
@@ -80,7 +80,7 @@ public class ItemController {
 //        book.setAuthor(form.getAuthor());
 //        book.setIsbn(form.getIsbn());
 
-        itemService.saveItem(itemId, form.getName(), form.getPrice(), form.getAuthor());
+        itemService.updateItem(itemId, form.getPrice(), form.getName(), form.getStockQuantity());
         return "redirect:/items";
     }
 }

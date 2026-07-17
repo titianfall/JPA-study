@@ -3,6 +3,7 @@ package jpabook.jpashop.controller;
 import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.service.ItemService;
+import jpabook.jpashop.service.UpdateBookDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,8 +80,11 @@ public class ItemController {
 //        book.setStockQuantity(form.getStockQuantity());
 //        book.setAuthor(form.getAuthor());
 //        book.setIsbn(form.getIsbn());
+//        > 준영속 엔티티를 만들어 merge 하는 방식. 대신 식별자와 변경할 데이터만 넘긴다.
 
-        itemService.updateItem(itemId, form.getPrice(), form.getName(), form.getStockQuantity());
+        itemService.updateItem(itemId, new UpdateBookDto(
+                form.getName(), form.getPrice(), form.getStockQuantity(),
+                form.getAuthor(), form.getIsbn()));
         return "redirect:/items";
     }
 }

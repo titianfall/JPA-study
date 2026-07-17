@@ -22,7 +22,7 @@
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.price}"></td>
                 <td th:text="${item.stockQuantity}"></td>
-                <td th:text="${item.isbn}"></td>
+                <td th:text="${item instanceof T(jpabook.jpashop.domain.item.Book) ? item.isbn : ''}"></td>
                 <td>
                     <a href="#" th:href="@{/items/{id}/edit (id=${item.id})}"
                        class="btn btn-primary" role="button">수정</a>

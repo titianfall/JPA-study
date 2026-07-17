@@ -7,17 +7,23 @@
 
 ### 실전! 스프링 부트와 JPA 활용 1편 (진행 중)
 
+📌 **[JPA 활용 1편 핵심 정리](study/docs/SpringBootJPA/JPA%20활용%201편%20핵심%20정리.md)** — 전 챕터 통합 요약
 실습 코드: [`study/SpringBootJPA/jpashop`](study/SpringBootJPA/jpashop)
+
+<details>
+<summary><b>챕터별 정리</b> (01~07장 완료)</summary>
 
 | # | 챕터 | 정리 |
 |---|------|------|
 | 01 | 프로젝트 환경설정 | [01. 프로젝트 환경설정.md](study/docs/SpringBootJPA/01.%20프로젝트%20환경설정.md) |
 | 02 | 도메인 분석 설계 | [02. 도메인 분석 및 설계.md](study/docs/SpringBootJPA/02.%20도메인%20분석%20및%20설계.md) |
-| 03 | 애플리케이션 구현 준비 | |
+| 03 | 애플리케이션 구현 준비 | [03. 애플리케이션 구현 준비.md](study/docs/SpringBootJPA/03.%20애플리케이션%20구현%20준비.md) |
 | 04 | 회원 도메인 개발 | [04. 회원 도메인 개발.md](study/docs/SpringBootJPA/04.%20회원%20도메인%20개발.md) |
 | 05 | 상품 도메인 개발 | [05. 상품 도메인 개발.md](study/docs/SpringBootJPA/05.%20상품%20도메인%20개발.md) |
 | 06 | 주문 도메인 개발 | [06. 주문 도메인 개발.md](study/docs/SpringBootJPA/06.%20주문%20도메인%20개발.md) |
 | 07 | 웹 계층 개발 | [07. 웹 계층 개발.md](study/docs/SpringBootJPA/07.%20웹%20계층%20개발.md) |
+
+</details>
 
 ### 자바 ORM 표준 JPA 프로그래밍 - 기본편 (완료)
 
